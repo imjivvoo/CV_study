@@ -1,1 +1,44 @@
-# Vit Code
+# Vision Transformer (ViT) 핵심 구조 정리
+## 1. 입력 Embedding(Input Embedding)
+
+이미지(2D Image)를 여러 개의 Patch로 분할하여 1D 토큰 시퀀스로 변환함
+
+Patch 크기: P × P
+
+Patch 개수: N = (H × W) / P²
+
+Embedding dimension: D
+
+각 Patch를 Flatten한 후, 학습 가능한 Linear Projection E를 통해
+D 차원으로 매핑
+→ Patch Embedding 생성
+
+## 2. [CLS] Token
+
+BERT의 [CLS] 토큰과 동일한 구조의 학습 가능한 토큰 x_class를
+Patch Embedding 앞에 추가
+
+최종 Layer L의 첫 번째 Output Token(z_L^0)이 이미지 전체 representation이 됨
+
+Classification Head와 연결되어 학습에 사용됨
+
+## 3. Classification Head
+
+Pre-Training: 1-hidden-layer MLP
+
+Fine-Tuning: Linear Layer(단일 선형층)
+
+## 4. Position Embedding
+
+Patch Embedding이 순서 정보(position) 를 잃지 않도록 Position Embedding 추가
+
+2D Position Embedding도 실험했지만 더 나은 성능을 보이지 않아
+→ 1D Position Embedding 사용
+
+## 5. Transformer Encoder
+
+최종 Embedding Sequence는 Transformer Encoder로 입력됨
+
+Encoder는 Multi-Head Self-Attention으로 구성됨
+
+전체 구조는 BERT의 Encoder와 동일하며, CNN 없이 Attention으로만 이미지 정보를 처리함
